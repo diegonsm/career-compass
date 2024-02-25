@@ -1,28 +1,32 @@
-const express = require('express');
-const router = express.Router();
-const { CohereClient } = require('cohere-ai');
+const cheerio = require("cheerio");
+const axios = require("axios");
 
-const cohere = new CohereClient({
-    token: "Nbphj8fs2o2mv3WpGm0ErBIGujqvC9FKf2MLUnMu",
-});
+const url = "https://web.uri.edu/career/professional-associations-and-affinity-groups/";
 
-router.post('/classification', async (req, res) => {
-  try {
-    const { text } = req.body;
+axios.get(url).then((response) => {
+  // Load the HTML into cheerio
+  const $ = cheerio.load(response.data);
+  const associations = [];
 
-    if (!text) {
-      return res.status(400).json({ message: 'Text is required for summarization.' });
+  // Assuming the list items are not structured with specific classes, we target all <li> elements
+  $("li").each((i, el) => {
+    const element = $(el);
+
+    // Extracting the <a> tag within the list item
+    const linkElement = element.find("a");
+    const link = linkElement.attr("href");
+    const name = linkElement.text().trim();
+
+    // The description is assumed to be the text within the <li>, excluding the <a> text
+    const description = element.text().replace(name, '').trim();
+
+    // If name and link are not empty, add to associations array
+    if (name !== "" && link !== "") {
+      associations.push({ name, description, link });
     }
+  });
 
-    const summarizeResponse = await cohere.summarize({
-        text: text,
-    });
-
-    return res.json({ summary: summarizeResponse.body.summary });
-  } catch (error) {
-    console.error('Error summarizing text:', error);
-    return res.status(500).json({ message: 'Text could not be summarized' });
-  }
+  console.log(associations);
+}).catch(error => {
+  console.error('Error fetching the webpage:', error);
 });
-
-module.exports = router;

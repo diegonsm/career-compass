@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-function Job() {
+function Scholarship() {
 
     const fetchData = async () => {
-        fetch('http://localhost:4000/jobs')
+        fetch('http://localhost:4000/scholarships')
         .then(response => {
             if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -72,4 +72,4 @@ function Job() {
   );
 }
 
-export default Job;
+export default Scholarship;
