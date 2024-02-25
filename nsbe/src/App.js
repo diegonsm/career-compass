@@ -1,33 +1,44 @@
 import React from 'react';
 import { classify } from './utilities/classify';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
   const [query, setQuery] = useState('');
   const [prediction, setPrediction] = useState('');
   const [confidence, setConfidence] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
   // for redirection
   useEffect(() => {
     setLoading(false);
+    if (confidence != null && confidence < 0.75) {
+      setAlertMessage("I'm not sure what you meant. Try searching for jobs/events/opportunities.")
+    }
     // navigate + logic
-    console.log('naviagate');
-  }, [prediction]);
+    console.log('navigate');
+  }, [prediction, confidence]);
 
   const handleButtonClick = () => {
+    setAlertMessage(''); // Reset alert message when button is clicked
+    
+    if (query === '') {
+      setAlertMessage('Input cannot be blank!');
+      return
+    }
     setLoading(true);
-    console.log(query);
     classify(query)
-    .then((res) => {
-      console.log(res.classifications[0].prediction);
-      console.log(res.classifications[0].confidence);
-      setPrediction(res.classifications[0].prediction);
-      setConfidence(res.classifications[0].confidence);
-    }).catch((err) => {
-      console.error('Err:', err);
-    })
+      .then((res) => {
+        console.log(res.classifications[0].prediction);
+        console.log(res.classifications[0].confidence);
+        setPrediction(res.classifications[0].prediction);
+        setConfidence(res.classifications[0].confidence);
+      }).catch((err) => {
+        console.error('Err:', err);
+        setAlertMessage('An error occurred. Please try again.'); // Set error message
+      }).finally(() => {
+        setLoading(false); // Set loading state to false after classification completes
+      });
   };
 
   const handleKeyPress = (event) => {
@@ -42,8 +53,10 @@ function App() {
   };
 
   return (
+    <>
     <div className="flex justify-center items-center h-screen">
-      <div className="relative w-2/3">
+      <div className="w-2/3">
+      <div className="relative">
         <input
           type="text"
           placeholder="What resources are you looking for?"
@@ -75,10 +88,20 @@ function App() {
           </button>
         )}
       </div>
-      {prediction !== '' && 
-      <div className='px-4'>Predction: {prediction}, Confidence: {confidence}</div>
+      {/* alerts */}
+      {alertMessage && 
+        <div className="bg-yellow-200 text-yellow-800 rounded-md p-4 mt-4">
+            {alertMessage}
+        </div>
       }
+      {/* predictions */}
+      {prediction &&
+      <div>prediction: {prediction}, confidence: {confidence}</div>
+      }
+      </div>
+      
     </div>
+  </>
   );
 }
 

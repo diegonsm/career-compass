@@ -4,5 +4,8 @@
     "cheerio": "^1.0.0-rc.12",
     "cohere": "^1.1.1",
     "cohere-ai": "^7.7.5"
+    "bootstrap": "^5.3.3",
+    "cohere-ai": "^7.7.5",
+    "react-bootstrap": "^2.10.1"
   }
 }
