@@ -25,6 +25,11 @@ function App() {
             path="/event"
             element={<Event />}
           />
+
+          {/* <Route 
+            path="/job"
+            element={<Job />}
+          />   */}
           
         </Routes>
       </div>

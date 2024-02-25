@@ -19,13 +19,13 @@ function Landing() {
     } else {
         switch(prediction) {
             case 'Job':
-                navigate('/list');
+                navigate('/job');
                 break;
             case 'Scholarship':
-                navigate('/list');
+                navigate('/scholarship');
                 break;
             case 'Organization':
-                navigate('/list');
+                navigate('/org');
                 break;
             case 'Event':
                 navigate('/event');
