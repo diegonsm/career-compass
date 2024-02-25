@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { CohereClient } from "cohere-ai";
+const cohere = new CohereClient({
+    token: "vR0nVApuMU47iHqNQmoXDP8K9cZ8TNAhjMcvhoRh", // This is your trial API key
+});
 
 function Job() {
 
@@ -50,9 +54,18 @@ function Job() {
         });
     }
 
+    async function getSummary() {
+        // call api with long desc
+        const response = await cohere.summarize({
+            text: longDesc,
+        });
+        setLongDesc(response.summary);
+    }
+
     const handleSummarizeClick = () => {
         // Add logic to summarize the selected posting details
         console.log('Summarizing details...');
+        getSummary();
     };
 
   return (
@@ -85,9 +98,8 @@ function Job() {
             <a href={postings.find(posting => posting.id === selectedPosting).link} target="_blank"><p className="text-blue-600 mb-4">{postings.find(posting => posting.id === selectedPosting).link}</p></a>
             {/* Add more details here as needed */}
             <button
-                className="bg-gray-400 text-white py-2 px-4 rounded cursor-not-allowed"
+                className="bg-gray-400 text-blue-600 py-2 px-4 rounded"
                 onClick={handleSummarizeClick}
-                disabled // Disable the button
             >
             Summarize
             </button>
