@@ -41,6 +41,19 @@ async function getEvents() {
     }
 }
 
+// Function to get job description
+async function getDesc(link) {
+    try {
+        console.log(link);
+        const response = await axios.get(link);
+        const $ = cheerio.load(response.data);
+        const desc = $(".job-description").text();
+        return [link, desc];
+    } catch (error) {
+        throw new Error("Error scraping job listings: " + error.message);
+    }
+}
+
 // Function to scrape jobs data
 async function getJobs() {
     try {
@@ -147,6 +160,16 @@ app.get('/scholarships', async (req, res) => {
     try {
         const scholarships = await getScholarships();
         res.json(scholarships);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/getDesc', async (req, res) => {
+    try {
+        const link = req.query.link;
+        const desc = await getDesc(link);
+        res.json(desc);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

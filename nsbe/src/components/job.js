@@ -25,6 +25,28 @@ function Job() {
     
     const [selectedPosting, setSelectedPosting] = useState(null);
     const [postings, setPostings] = useState([]);
+    const [status, setStatus] = useState('');
+
+    
+    async function getDescription(posting) {
+        fetch(`http://localhost:4000/getDesc?link=${posting.link}`)
+        .then(response => {
+            if (!response.ok) {
+            setStatus('Too many requests, try again later.');
+            throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // setPostings(data);
+            // console.log(data);
+            postings.find(posting => posting.link === data[0]).longDesc = data[1];
+            console.log(posting);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
 
     const handleSummarizeClick = () => {
         // Add logic to summarize the selected posting details
@@ -41,7 +63,10 @@ function Job() {
             <li
               key={posting.id}
               className={`cursor-pointer p-2 mb-2 rounded ${selectedPosting === posting.id ? 'bg-blue-200' : 'hover:bg-gray-100'}`}
-              onClick={() => setSelectedPosting(posting.id)}
+              onClick={() => {
+                setSelectedPosting(posting.id);
+                getDescription(posting);
+                }}
             >
               <h3 className="text-blue-600">{posting.title}</h3>
               <p className="text-sm text-gray-600">{posting.desc}</p>
