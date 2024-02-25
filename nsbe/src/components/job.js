@@ -26,6 +26,7 @@ function Job() {
     const [selectedPosting, setSelectedPosting] = useState(null);
     const [postings, setPostings] = useState([]);
     const [status, setStatus] = useState('');
+    const [longDesc, setLongDesc] = useState('');
 
     
     async function getDescription(posting) {
@@ -41,7 +42,8 @@ function Job() {
             // setPostings(data);
             // console.log(data);
             postings.find(posting => posting.link === data[0]).longDesc = data[1];
-            console.log(posting);
+            // console.log(posting);
+            setLongDesc(data[1]);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -79,7 +81,7 @@ function Job() {
         {selectedPosting !== null && (
           <div>
             <h2 className="text-lg font-semibold">{postings.find(posting => posting.id === selectedPosting).title}</h2>
-            <p className="text-gray-600 mb-4">{postings.find(posting => posting.id === selectedPosting).desc}</p>
+            <p className="text-gray-600 mb-4">{longDesc}</p>
             <a href={postings.find(posting => posting.id === selectedPosting).link} target="_blank"><p className="text-blue-600 mb-4">{postings.find(posting => posting.id === selectedPosting).link}</p></a>
             {/* Add more details here as needed */}
             <button

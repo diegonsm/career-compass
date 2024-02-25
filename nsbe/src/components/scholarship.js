@@ -11,7 +11,9 @@ function Scholarship() {
             return response.json();
         })
         .then(data => {
+          console.log(data);
             setPostings(data);
+            setLoading(false);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -25,6 +27,7 @@ function Scholarship() {
     
     const [selectedPosting, setSelectedPosting] = useState(null);
     const [postings, setPostings] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const handleSummarizeClick = () => {
         // Add logic to summarize the selected posting details
@@ -32,7 +35,12 @@ function Scholarship() {
     };
 
   return (
-    <div className="flex h-screen pt-16"> {/* Set the height of the flex container to h-screen */}
+    <>
+    {loading && 
+    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-200 bg-opacity-50 z-50">
+      <div className="w-16 h-16 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
+    </div>}
+    {!loading && <div className="flex h-screen pt-16"> {/* Set the height of the flex container to h-screen */}
       {/* Left section - List of postings */}
       <div className="w-1/3 p-4 border-r border-gray-200">
         <h2 className="text-lg font-semibold mb-4">Postings</h2>
@@ -55,7 +63,7 @@ function Scholarship() {
           <div>
             <h2 className="text-lg font-semibold">{postings.find(posting => posting.id === selectedPosting).title}</h2>
             <p className="text-gray-600 mb-4">{postings.find(posting => posting.id === selectedPosting).desc}</p>
-            <a href={postings.find(posting => posting.id === selectedPosting).link} target="_blank"><p className="text-blue-600 mb-4">{postings.find(posting => posting.id === selectedPosting).link}</p></a>
+            <a href={`https://www.scholarships.com/${postings.find(posting => posting.id === selectedPosting).link}`} target="_blank"><p className="text-blue-600 mb-4">{`https://www.scholarships.com/${postings.find(posting => posting.id === selectedPosting).link}`}</p></a>
             {/* Add more details here as needed */}
             <button
                 className="bg-gray-400 text-white py-2 px-4 rounded cursor-not-allowed"
@@ -68,7 +76,8 @@ function Scholarship() {
           </div>
         )}
       </div>
-    </div>
+    </div>}
+    </>
   );
 }
 
