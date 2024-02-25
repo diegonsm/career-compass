@@ -28,7 +28,7 @@ function Landing() {
                 navigate('/list');
                 break;
             case 'Event':
-                navigate('/list');
+                navigate('/event');
                 break;
             
         }
