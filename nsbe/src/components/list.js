@@ -32,7 +32,7 @@ function List() {
   };
 
   return (
-    <div className="flex h-screen"> {/* Set the height of the flex container to h-screen */}
+    <div className="flex h-screen pt-16"> {/* Set the height of the flex container to h-screen */}
       {/* Left section - List of postings */}
       <div className="w-1/3 p-4 border-r border-gray-200">
         <h2 className="text-lg font-semibold mb-4">Postings</h2>

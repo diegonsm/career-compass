@@ -1,6 +1,7 @@
 import React from 'react';
 import { classify } from '../utilities/classify';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Landing() {
   const [query, setQuery] = useState('');
@@ -8,15 +9,33 @@ function Landing() {
   const [confidence, setConfidence] = useState(null);
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const navigate = useNavigate();
 
   // for redirection
   useEffect(() => {
     setLoading(false);
     if (confidence != null && confidence < 0.75) {
       setAlertMessage("I'm not sure what you meant. Try searching for jobs/events/opportunities.")
+    } else {
+        switch(prediction) {
+            case 'Job':
+                navigate('/list');
+                break;
+            case 'Scholarship':
+                navigate('/list');
+                break;
+            case 'Organization':
+                navigate('/list');
+                break;
+            case 'Event':
+                navigate('/list');
+                break;
+            
+        }
+
     }
     // navigate + logic
-    console.log('navigate');
+    // console.log('navigate');
   }, [prediction, confidence]);
 
   const handleButtonClick = () => {
