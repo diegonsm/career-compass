@@ -114,9 +114,9 @@ function Landing() {
         </div>
       }
       {/* predictions */}
-      {prediction &&
+      {/* {prediction &&
       <div>prediction: {prediction}, confidence: {confidence}</div>
-      }
+      } */}
       </div>
       
     </div>
